@@ -7,6 +7,42 @@
 <body>
 <canvas id="draw" width="800" height="800"></canvas>
 <script>
+
+  const canvas = document.getElementById('draw');
+  const ctx = canvas.getContext('2d');
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  ctx.lineCap = 'round';
+  ctx.lineWidth = 1;
+  
+  let [lastX, lastY] = [0, 0];
+  let isDrawing = false;
+  let hue = 0;
+  let direction = true
+  
+  function draw(e) {
+    if(!isDrawing) return
+    ctx.strokeStyle = `hsl(${hue}, 50%, 50%)`;
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.stroke();
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+    hue++
+    direction ? ctx.lineWidth++ : ctx.lineWidth--;
+    if(ctx.lineWidth >= 70) direction = false;
+    if(ctx.lineWidth === 1) direction = true;
+  }
+
+  window.addEventListener('mousedown', (e) => {
+    isDrawing = !isDrawing;
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+  });
+  window.addEventListener('mousemove', draw);
+  window.addEventListener('mouseup', () => isDrawing = false);
+  window.addEventListener('mouseout', () => isDrawing = false);
+
 </script>
 
 <style>

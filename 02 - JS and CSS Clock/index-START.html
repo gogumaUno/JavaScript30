@@ -70,23 +70,48 @@
   </style>
 
   <script>
-      const hourHand = document.querySelector(".hour-hand"),
-            minHand = document.querySelector(".min-hand"),
-            secondHand = document.querySelector(".second-hand");
       
-      function setDate() {
-        const now = new Date();
-        const seconds = now.getSeconds();
-        const minutes = now.getMinutes();
-        const hours = now.getHours();
-        const degrees = (param, operand) => (((param / operand) * 360) + 90);
-        const transform = (elem, func) => elem.style.transform = `rotate(${func}deg)`;
-        transform(secondHand, degrees(seconds, 60));
-        transform(minHand, degrees(minutes, 60));
-        transform(hourHand, degrees(hours, 12));
+      class Clock {
+        constructor(hourHand, minHand, secHand) {
+          this.now = new Date();
+          this.hourHand = { hand: document.querySelector(hourHand), time: () => this.time.getHours() };
+          this.minHand = { hand: document.querySelector(minHand), time: () => this.time.getMinutes() };
+          this.secHand = { hand: document.querySelector(secHand), time: () => this.time.getSeconds() };
+        }
+
+        get time() {
+          return this.now
+        }
+
+        set time(obj) {
+          this.now = obj;
+        }
+
+        timeToDegrees(time, operand) {
+          return ((time / operand) * 360) + 90;
+        }
+
+        moveClockHand(elem, func) {
+          return elem.style.transform = `rotate(${func}deg)`;
+        }
+
+        run() {
+          setInterval(() => {
+            this.time = new Date();
+            const { hourHand, minHand, secHand, moveClockHand, timeToDegrees } = this;
+            const clockHands = [hourHand, minHand, secHand];
+            clockHands.forEach( hand => (
+              hand.hand.classList.contains('hour-hand') ? 
+              moveClockHand(hand.hand, timeToDegrees(hand.time(), 12)) : 
+              moveClockHand(hand.hand, timeToDegrees(hand.time(), 60))
+            ))
+          }, 1000);
+        }
       }
-      
-      setInterval(setDate,1000);
+
+      const clock = new Clock('.hour-hand', '.min-hand', '.second-hand');
+      clock.run();
+
   </script>
 </body>
 </html>
