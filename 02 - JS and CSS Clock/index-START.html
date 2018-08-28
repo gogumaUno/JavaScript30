@@ -80,10 +80,10 @@
         const minutes = now.getMinutes();
         const hours = now.getHours();
         const degrees = (param, operand) => (((param / operand) * 360) + 90);
-        const transform = (elem, param, operand) => elem.style.transform = `rotate(${degrees(param, operand)}deg)`;
-        transform(secondHand, seconds, 60);
-        transform(minHand, minutes, 60);
-        transform(hourHand, hours, 12);
+        const transform = (elem, func) => elem.style.transform = `rotate(${func}deg)`;
+        transform(secondHand, degrees(seconds, 60));
+        transform(minHand, degrees(minutes, 60));
+        transform(hourHand, degrees(hours, 12));
       }
       
       setInterval(setDate,1000);
