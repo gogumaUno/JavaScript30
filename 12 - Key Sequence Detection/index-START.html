@@ -7,6 +7,16 @@
 </head>
 <body>
 <script>
+  let input = [];
+  const key = 'catch';
+
+  const eventHandler = (e) => {
+    input.push(e.key);
+    input.splice(-key.length - 1, input.length - key.length);
+    if(input.join('').includes(key)) cornify_add();
+  }
+
+  document.addEventListener('keydown', eventHandler)
 </script>
 </body>
 </html>
